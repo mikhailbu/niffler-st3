@@ -1,13 +1,10 @@
-package guru.qa.niffler.jupiter;
+package guru.qa.niffler.jupiter.extention;
 
 import guru.qa.niffler.api.SpendService;
+import guru.qa.niffler.jupiter.annotations.Spend;
 import guru.qa.niffler.model.SpendJson;
 import okhttp3.OkHttpClient;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.ParameterResolutionException;
-import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.api.extension.*;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
@@ -41,7 +38,6 @@ public class SpendExtension implements BeforeEachCallback, ParameterResolver {
             context.getStore(NAMESPACE).put("spend", createdSpend);
         }
     }
-
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         return parameterContext.getParameter()
@@ -51,6 +47,8 @@ public class SpendExtension implements BeforeEachCallback, ParameterResolver {
 
     @Override
     public SpendJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return extensionContext.getStore(NAMESPACE).get("spend", SpendJson.class);
+        return extensionContext
+                .getStore(SpendExtension.NAMESPACE)
+                .get("spend", SpendJson.class);
     }
 }
